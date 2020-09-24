@@ -6,19 +6,17 @@ import random
 def eliza():
     print("Hello, my name is Eliza. Talk to me.")
     while True:
-        response = input("> ")
-        response = preprocess(response)
+        response = input("> ")      # first step is getting the input sentence from the user and storing it in a 'response' variable
+        response = preprocess(response)     # second step is to strip all punctuation and lowercase so we can more accurately find keywords
         if response == "bye" or response == "shut up":
             print("I don't like you anymore. Bye.")
             break
         else:
-            response = keywords(response)
-            print("The response is ", response)
-            response = conjugate(response)
+            response = keywords(response)   # checks preprocessed sentence for specific keywords, found in 'list_of_keyword'
+            #print("The response is ", response) #
+            response = conjugate(response)  # throws
             response = buildreply(response)
             print(response)
-
-
 
 
 
@@ -39,13 +37,13 @@ def keywords(response):
 
 #    eliza_emotions(response)
 
-    for word in list_of_keywords:
-        if word in response:
+    for word in list_of_keywords:   # do this for every item in list_of_keywords (search), items called "word"
+        if word in response:    # check to see if that word matches any item in our taken in response
 
-            cut_word_and_left = response.find(word)
+            cut_word_and_left = response.find(word)     # index for where in the word to cut from
             index = list_of_keywords.index(word)
             response = response[cut_word_and_left:]
-            response = response.replace(word, str(index))
+            response = response.replace(word, str(index)+" ")
 
             return response
     return "-1"
@@ -121,126 +119,134 @@ def conjugate(new_response):
         elif conjugate == "me":
             fixed_response = fixed_response + ["you"]
         else:
-            fixed_response = fixed_response + [conjugate]
+            fixed_response = fixed_response + [conjugate]   # if we don't find the current word in question, add it to the list as it's not a conjugate
 
 
 
     for conjugate in fixed_response:
-            conjugated_response = conjugated_response + conjugate + " "
+            conjugated_response = conjugated_response + conjugate + " "     # now we build the string with the items in the word list
 
-    #print(conjugated_response)
-    return conjugated_response
+    s = conjugated_response
+    s.split()
+    return s
 
 
 def buildreply(response):
-    if response[0:1] == "-1":
+
+
+
+    if "-1" in response.split():
         response = response.replace("-1", "")
         reply = getreply(-1)
-    elif "0" in response:
+    elif "0" in response.split():
         response = response.replace("0", "")
         reply = getreply(0)
-    elif "1" in response:
+    elif "1" in response.split():
         response = response.replace("1", "")
         reply = getreply(1)
-    elif "2" in response:
+    elif "2" in response.split():
         response = response.replace("2", "")
         reply = getreply(2)
-    elif "3" in response:
+    elif "3" in response.split():
         response = response.replace("3", "")
         reply = getreply(3)
-    elif "4" in response:
+    elif "4" in response.split():
         response = response.replace("4", "")
         reply = getreply(4)
-    elif "5" in response:
+    elif "5" in response.split():
         response = response.replace("5", "")
         reply = getreply(5)
-    elif "6" in response:
+    elif "6" in response.split():
         response = response.replace("6", "")
         reply = getreply(6)
-    elif "7" in response:
+    elif "7" in response.split():
         response = response.replace("7", "")
         reply = getreply(7)
-    elif "8" in response:
+    elif "8" in response.split():
         response = response.replace("8", "")
         reply = getreply(8)
-    elif "9" in response:
+    elif "9" in response.split():
         response = response.replace("9", "")
         reply = getreply(9)
-    elif "10" in response:
+    elif "10" in response.split():
         response = response.replace("10", "")
         reply = getreply(10)
-    elif "11" in response:
+    elif "11" in response.split():
         response = response.replace("11", "")
         reply = getreply(11)
-    elif "12" in response:
+    elif "12" in response.split():
         response = response.replace("12", "")
         reply = getreply(12)
-    elif "13" in response:
+    elif "13" in response.split():
         response = response.replace("13", "")
         reply = getreply(13)
-    elif "14" in response:
+    elif "14" in response.split():
         response = response.replace("14", "")
         reply = getreply(14)
-    elif "15" in response:
+    elif "15" in response.split():
         response = response.replace("15", "")
         reply = getreply(15)
-    elif "16" in response:
+    elif "16" in response.split():
         response = response.replace("16", "")
         reply = getreply(16)
-    elif "17" in response:
+    elif "17" in response.split():
         response = response.replace("17", "")
         reply = getreply(17)
-    elif "18" in response:
+    elif "18" in response.split():
         response = response.replace("18", "")
         reply = getreply(18)
-    elif "19" in response:
+    elif "19" in response.split():
         response = response.replace("19", "")
         reply = getreply(19)
-    elif "20" in response:
+    elif "20" in response.split():
         response = response.replace("20", "")
         reply = getreply(20)
-    elif "21" in response:
+    elif "21" in response.split():
         response = response.replace("21", "")
         reply = getreply(21)
-    elif "22" in response:
+    elif "22" in response.split():
         response = response.replace("22", "")
         reply = getreply(22)
-    elif "23" in response:
+    elif "23" in response.split():
         response = response.replace("23", "")
         reply = getreply(23)
-    elif "24" in response:
+    elif "24" in response.split():
         response = response.replace("24", "")
         reply = getreply(24)
-    elif "25" in response:
+    elif "25" in response.split():
         response = response.replace("25", "")
         reply = getreply(25)
-    elif "26" in response:
+    elif "26" in response.split():
         response = response.replace("26", "")
         reply = getreply(26)
-    elif "27" in response:
+    elif "27" in response.split():
         response = response.replace("27", "")
         reply = getreply(27)
-    elif "28" in response:
+    elif "28" in response.split():
         response = response.replace("28", "")
         reply = getreply(28)
-    elif "29" in response:
+    elif "29" in response.split():
         response = response.replace("29", "")
         reply = getreply(29)
-    elif "30" in response:
+    elif "30" in response.split():
         response = response.replace("30", "")
         reply = getreply(30)
-    elif "31" in response:
+    elif "31" in response.split():
         response = response.replace("31", "")
         reply = getreply(31)
-    elif "32" in response:
+    elif "32" in response.split():
         response = response.replace("32", "")
         reply = getreply(32)
-    elif "33" in response:
+    elif "33" in response.split():
         response = response.replace("33", "")
         reply = getreply(33)
-    elif "34" in response:
+    elif "34" in response.split():
         response = response.replace("34", "")
         reply = getreply(34)
+    else:
+        response = response.replace("-1", "")
+        reply = getreply(-1)
+
 
 #Concatenate the reply with the response (right-hand sentence) and a "?"
     if "*" in reply:
@@ -328,10 +334,6 @@ def getreply(number):
     return reply[random_reply]
 
 
-
-
-
-#whats up Tyler?!
 
 
 eliza()

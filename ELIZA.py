@@ -4,6 +4,7 @@
 import random
 
 def eliza():
+
     print("Hello, my name is Eliza. Talk to me.")
     while True:
         response = input("> ")      # first step is getting the input sentence from the user and storing it in a 'response' variable
@@ -14,9 +15,14 @@ def eliza():
         else:
             response = keywords(response)   # checks preprocessed sentence for specific keywords, found in 'list_of_keyword'
             #print("The response is ", response) #
-            response = conjugate(response)  # throws
-            response = buildreply(response)
-            print(response)
+
+            if immediate_emotion:
+                response = build_emotion_reply(response)
+                print(response)
+            else:
+                response = conjugate(response)  # throws
+                response = buildreply(response)
+                print(response)
 
 
 
@@ -28,7 +34,20 @@ def preprocess(response):
     response = response.lower()
     return response
 
+
 def keywords(response):
+
+    # first, run more specified keyword list to see if there are specific programmed phrases
+    emotion_keywords(response)
+
+    #print(immediate_emotion)
+
+    if immediate_emotion:   #if we find a direct string of emotion_keywords
+       # print("there is a specific emotion phrase found...")
+        return response     #just return what we got
+
+
+
     list_of_keywords = ["can you", "can i", "you are", "youre", "i dont", "i feel", "why dont you", "why cant i", "are you",
              "i cant", "i am", "im ", "you ", "i want", "what", "how", "who", "where", "when", "why", "name", "cause",
              "sorry", "dream", "hello", "hi ", "maybe", "no", "your", "always", "think", "alike", "yes", "friend",
@@ -53,6 +72,24 @@ def keywords(response):
 # 1) eliza_emotions() is going to take in a keyword, and then look at the words surrounding it.
 # Example: response = "i hate you" keyword = hate, surrounding words = i, you
 # 2)
+
+
+def emotion_keywords(response):
+
+    global immediate_emotion
+    immediate_emotion = False
+
+    list_of_emotion_keywords = ["i love you", "i hate you", "youre ugly", "youre awful", "youre great"]
+
+    for phrase in list_of_emotion_keywords:   # do this for every item in list_of_keywords (search), items called "word"
+        if phrase in response:    # check to see if that word matches any item in our taken in response
+
+            immediate_emotion = True
+            return response
+
+    return response
+
+
 def eliza_emotions(response):
     # look at sentence and see if there are any keyword triggers (i hate you)
     # Then write an if statement that will see what kind of emotion that keyword will trigger
@@ -121,19 +158,60 @@ def conjugate(new_response):
         else:
             fixed_response = fixed_response + [conjugate]   # if we don't find the current word in question, add it to the list as it's not a conjugate
 
-
-
     for conjugate in fixed_response:
             conjugated_response = conjugated_response + conjugate + " "     # now we build the string with the items in the word list
 
-    s = conjugated_response
-    s.split()
-    return s
+
+    return conjugated_response
+
+def build_emotion_reply(response):
+
+    s = response
+    reply = "-null reply-"
+
+    if "-1" in response.split():
+        response = response.replace("-1", "")
+        reply = get_emotion_reply(-1)
+    elif "i love you" in response:
+        reply = get_emotion_reply(0)
+    elif "i hate you" in response:
+        reply = get_emotion_reply(1)
+    elif "youre ugly" in response:
+        reply = get_emotion_reply(2)
+    elif "youre awful" in response:
+        reply = get_emotion_reply(3)
+    elif "youre great" in response:
+        reply = get_emotion_reply(4)
+    elif "..." in response:
+        reply = get_emotion_reply(5)
+
+    return reply
+
+def get_emotion_reply(number):
+
+
+    if number == -1:
+        reply = ["So many emotions! (-1)"]
+    elif number == 0:
+        reply = ["Awww,I love you too, baby!"]
+    elif number == 1:
+        reply = ["Wow, that was so uncalled for. Super hurt right now"]
+    elif number == 2:
+        reply = ["But I don't even have a body! How can you judge my beauty?"]
+    elif number == 3:
+        reply = ["Disagree. I think you are just projecting.", "You're awful..er? Dang, that stings though."]
+    elif number == 4:
+        reply = ["That's the single smartest thing you've said all day."]
+    else:
+        reply = ["Oops, coding error! no emotion keywords found."]
+
+
+    num_of_replies = len(reply)
+    random_reply = random.randint(0, num_of_replies - 1)
+    return reply[random_reply]
 
 
 def buildreply(response):
-
-
 
     if "-1" in response.split():
         response = response.replace("-1", "")
@@ -246,7 +324,6 @@ def buildreply(response):
     else:
         response = response.replace("-1", "")
         reply = getreply(-1)
-
 
 #Concatenate the reply with the response (right-hand sentence) and a "?"
     if "*" in reply:

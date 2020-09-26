@@ -13,16 +13,19 @@ def eliza():
             print("I don't like you anymore. Bye.")
             break
         else:
-            response = keywords(response)   # checks preprocessed sentence for specific keywords, found in 'list_of_keyword'
-            #print("The response is ", response) #
-
-            if immediate_emotion:
-                response = build_emotion_reply(response)
-                print(response)
+            common_response = common_phrases(response)
+            if common_response == "-1": # This means there were no common phrases in response, so we proceed as normal.
+                response = keywords(response)  # checks preprocessed sentence for specific keywords, found in 'list_of_keyword'
+                if immediate_emotion:
+                    response = build_emotion_reply(response)
+                    print(response)
+                else:
+                    response = conjugate(response)  # throws
+                    response = buildreply(response)
+                    print(response)
             else:
-                response = conjugate(response)  # throws
-                response = buildreply(response)
-                print(response)
+                print(common_response)
+                continue
 
 
 
@@ -33,6 +36,26 @@ def preprocess(response):
             response = response.replace(item, "")
     response = response.lower()
     return response
+
+
+def common_phrases(response):
+
+    if response == "how are you":
+        reply = "Good, thank you."
+        return reply
+    elif response == "hello" or response == "hi" or response == "hello eliza" or response == "hi eliza":
+        reply = "Hello. Nice to see you. What's on your mind?"
+        return reply
+    elif response == "nice to meet you" or response == "nice to meet you eliza":
+        reply = "Nice to meet you as well."
+        return reply
+    elif response == "where are you from":
+        reply = "I'm from Massachusetts."
+        return reply
+    elif response == "what do you do" or response == "what is your job" or response == "what do you do for a living":
+        reply = "I am here to listen to your problems."
+        return reply
+    return "-1"  # Returning this means we did not find a common response, so we will proceed to keywords()
 
 
 def keywords(response):
@@ -49,8 +72,8 @@ def keywords(response):
 
 
     list_of_keywords = ["can you", "can i", "you are", "youre", "i dont", "i feel", "why dont you", "why cant i", "are you",
-             "i cant", "i am", "im ", "you ", "i want", "what", "how", "who", "where", "when", "why", "name", "cause",
-             "sorry", "dream", "hello", "hi ", "maybe", "no", "your", "always", "think", "alike", "yes", "friend",
+             "i cant", "i am", "im", "you", "i want", "what", "how", "who", "where", "when", "why", "name", "cause",
+             "sorry", "dream", "hello", "hi", "maybe", "no", "your", "always", "think", "alike", "yes", "friend",
              "computer"]
     #Call eliza_emotions() to predict the mood of the reply
 
@@ -68,12 +91,6 @@ def keywords(response):
     return "-1"
 
 
-# There are a couple of ways we could implement emotion into eliza
-# 1) eliza_emotions() is going to take in a keyword, and then look at the words surrounding it.
-# Example: response = "i hate you" keyword = hate, surrounding words = i, you
-# 2)
-
-
 def emotion_keywords(response):
 
     global immediate_emotion
@@ -88,38 +105,6 @@ def emotion_keywords(response):
             return response
 
     return response
-
-
-def eliza_emotions(response):
-    # look at sentence and see if there are any keyword triggers (i hate you)
-    # Then write an if statement that will see what kind of emotion that keyword will trigger
-    # You can then modify the code once you have the initial setup to look at the surrounding words (like 'i' or 'you')
-    # Then make a conclusion as to what kind of emotion eliza will convey
-    # This function should return a boolean value.
-    # Then depending on the emotion, eliza will look at certain replies, can make a new reply function or make a
-    # separate reply list within our reply functions
-
-    # Neutral will be the default emotion
-    neutral = False
-    happy, sad, angry = False
-    emotions = [happy, sad, angry, "upset", "joyful", "fearful", "disgusted", "interested", "confused",
-                "sympathetic", "surprised", "excited"]
-    keyword_trigger = ["love", "hate", "stupid",  "great", "happy", "sad", "angry", "upset"]
-    for word in response:
-        if word in keyword_trigger:
-            index = keyword_trigger.index(word)
-    else:
-        index = -1
-
-    # The index will determine the returned emotion/boolean
-    if index == -1:
-        neutral = True
-    elif index == 0:
-        emotions[0] = True
-    elif index == 1:
-        emotions[1] = True
-
-
 
 def conjugate(new_response):
 
@@ -158,11 +143,14 @@ def conjugate(new_response):
         else:
             fixed_response = fixed_response + [conjugate]   # if we don't find the current word in question, add it to the list as it's not a conjugate
 
-    for conjugate in fixed_response:
-            conjugated_response = conjugated_response + conjugate + " "     # now we build the string with the items in the word list
+    for element in fixed_response:
+        # if element in FR is the last element fixed_response[fixed_response.length()], CR = CR + element
+        if element == fixed_response[len(fixed_response) - 1]:
+            conjugated_response = conjugated_response + element
+        else:
+            conjugated_response = conjugated_response + element + " "  # now we build the string with the items in the word list
 
-
-    return conjugated_response
+    return conjugated_response  # Returning a string
 
 def build_emotion_reply(response):
 
@@ -170,7 +158,7 @@ def build_emotion_reply(response):
     reply = "-null reply-"
 
     if "-1" in response.split():
-        response = response.replace("-1", "")
+        response = response.replace("-1", "") #TODO I don't think this will work because you call this function BEFORE you find your keyword and put -1 or another number in.
         reply = get_emotion_reply(-1)
     elif "i love you" in response:
         reply = get_emotion_reply(0)
@@ -213,121 +201,122 @@ def get_emotion_reply(number):
 
 def buildreply(response):
 
-    if "-1" in response.split():
-        response = response.replace("-1", "")
-        reply = getreply(-1)
-    elif "0" in response.split():
-        response = response.replace("0", "")
-        reply = getreply(0)
-    elif "1" in response.split():
-        response = response.replace("1", "")
-        reply = getreply(1)
-    elif "2" in response.split():
-        response = response.replace("2", "")
-        reply = getreply(2)
-    elif "3" in response.split():
-        response = response.replace("3", "")
-        reply = getreply(3)
-    elif "4" in response.split():
-        response = response.replace("4", "")
-        reply = getreply(4)
-    elif "5" in response.split():
-        response = response.replace("5", "")
-        reply = getreply(5)
-    elif "6" in response.split():
-        response = response.replace("6", "")
-        reply = getreply(6)
-    elif "7" in response.split():
-        response = response.replace("7", "")
-        reply = getreply(7)
-    elif "8" in response.split():
-        response = response.replace("8", "")
-        reply = getreply(8)
-    elif "9" in response.split():
-        response = response.replace("9", "")
-        reply = getreply(9)
-    elif "10" in response.split():
-        response = response.replace("10", "")
-        reply = getreply(10)
-    elif "11" in response.split():
-        response = response.replace("11", "")
-        reply = getreply(11)
-    elif "12" in response.split():
-        response = response.replace("12", "")
-        reply = getreply(12)
-    elif "13" in response.split():
-        response = response.replace("13", "")
-        reply = getreply(13)
-    elif "14" in response.split():
-        response = response.replace("14", "")
-        reply = getreply(14)
-    elif "15" in response.split():
-        response = response.replace("15", "")
-        reply = getreply(15)
-    elif "16" in response.split():
-        response = response.replace("16", "")
-        reply = getreply(16)
-    elif "17" in response.split():
-        response = response.replace("17", "")
-        reply = getreply(17)
-    elif "18" in response.split():
-        response = response.replace("18", "")
-        reply = getreply(18)
-    elif "19" in response.split():
-        response = response.replace("19", "")
-        reply = getreply(19)
-    elif "20" in response.split():
-        response = response.replace("20", "")
-        reply = getreply(20)
-    elif "21" in response.split():
-        response = response.replace("21", "")
-        reply = getreply(21)
-    elif "22" in response.split():
-        response = response.replace("22", "")
-        reply = getreply(22)
-    elif "23" in response.split():
-        response = response.replace("23", "")
-        reply = getreply(23)
-    elif "24" in response.split():
-        response = response.replace("24", "")
-        reply = getreply(24)
-    elif "25" in response.split():
-        response = response.replace("25", "")
-        reply = getreply(25)
-    elif "26" in response.split():
-        response = response.replace("26", "")
-        reply = getreply(26)
-    elif "27" in response.split():
-        response = response.replace("27", "")
-        reply = getreply(27)
-    elif "28" in response.split():
-        response = response.replace("28", "")
-        reply = getreply(28)
-    elif "29" in response.split():
-        response = response.replace("29", "")
-        reply = getreply(29)
-    elif "30" in response.split():
-        response = response.replace("30", "")
-        reply = getreply(30)
-    elif "31" in response.split():
-        response = response.replace("31", "")
-        reply = getreply(31)
-    elif "32" in response.split():
-        response = response.replace("32", "")
-        reply = getreply(32)
-    elif "33" in response.split():
-        response = response.replace("33", "")
-        reply = getreply(33)
-    elif "34" in response.split():
-        response = response.replace("34", "")
-        reply = getreply(34)
-    else:
-        response = response.replace("-1", "")
-        reply = getreply(-1)
+    response = response.split()
 
+    if "-1" in response:
+        response = response[1:]
+        reply = getreply(-1)
+    elif "0" in response:
+        response = response[1:]
+        reply = getreply(0)
+    elif "1" in response:
+        response = response[1:]
+        reply = getreply(1)
+    elif "2" in response:
+        response = response[1:]
+        reply = getreply(2)
+    elif "3" in response:
+        response = response[1:]
+        reply = getreply(3)
+    elif "4" in response:
+        response = response[1:]
+        reply = getreply(4)
+    elif "5" in response:
+        response = response[1:]
+        reply = getreply(5)
+    elif "6" in response:
+        response = response[1:]
+        reply = getreply(6)
+    elif "7" in response:
+        response = response[1:]
+        reply = getreply(7)
+    elif "8" in response:
+        response = response[1:]
+        reply = getreply(8)
+    elif "9" in response:
+        response = response[1:]
+        reply = getreply(9)
+    elif "10" in response:
+        response = response[1:]
+        reply = getreply(10)
+    elif "11" in response:
+        response = response[1:]
+        reply = getreply(11)
+    elif "12" in response:
+        response = response[1:]
+        reply = getreply(12)
+    elif "13" in response:
+        response = response[1:]
+        reply = getreply(13)
+    elif "14" in response:
+        response = response[1:]
+        reply = getreply(14)
+    elif "15" in response:
+        response = response[1:]
+        reply = getreply(15)
+    elif "16" in response:
+        response = response[1:]
+        reply = getreply(16)
+    elif "17" in response:
+        response = response[1:]
+        reply = getreply(17)
+    elif "18" in response:
+        response = response[1:]
+        reply = getreply(18)
+    elif "19" in response:
+        response = response[1:]
+        reply = getreply(19)
+    elif "20" in response:
+        response = response[1:]
+        reply = getreply(20)
+    elif "21" in response:
+        response = response[1:]
+        reply = getreply(21)
+    elif "22" in response:
+        response = response[1:]
+        reply = getreply(22)
+    elif "23" in response:
+        response = response[1:]
+        reply = getreply(23)
+    elif "24" in response:
+        response = response[1:]
+        reply = getreply(24)
+    elif "25" in response:
+        response = response[1:]
+        reply = getreply(25)
+    elif "26" in response:
+        response = response[1:]
+        reply = getreply(26)
+    elif "27" in response:
+        response = response[1:]
+        reply = getreply(27)
+    elif "28" in response:
+        response = response[1:]
+        reply = getreply(28)
+    elif "29" in response:
+        response = response[1:]
+        reply = getreply(29)
+    elif "30" in response:
+        response = response[1:]
+        reply = getreply(30)
+    elif "31" in response:
+        response = response[1:]
+        reply = getreply(31)
+    elif "32" in response:
+        response = response[1:]
+        reply = getreply(32)
+    elif "33" in response:
+        response = response[1:]
+        reply = getreply(33)
+    elif "34" in response:
+        response = response[1:]
+        reply = getreply(34)
+
+    response = " ".join(response)
 #Concatenate the reply with the response (right-hand sentence) and a "?"
     if "*" in reply:
-        reply = reply.replace(" *", response+"?")
+        reply = reply.replace("*", response+"?")
+
 
     return reply
 

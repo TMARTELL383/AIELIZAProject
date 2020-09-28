@@ -133,11 +133,9 @@ def emotion_keywords(response):
 
 
 def build_emotion_reply(response):
-    s = response
-    reply = "-null reply-"
+    reply = ""
 
-    if "-1" in response.split():
-        response = response.replace("-1", "")
+    if "-1" in response:
         reply = get_emotion_reply("-1")
     elif "i love you" in response:
         reply = get_emotion_reply("i love you")
@@ -199,8 +197,8 @@ def get_emotion_reply(phrase):
         reply = [
                  "Oh, so now you're nice to me?",
                  "I am skeptical, but I will take it.",
-                 "Computing...............I love you too.",
-                 "You make me the happiest set of binary codes ever.",
+                 "I love you too.",
+                 "You make me the happiest girl in the world.",
                  "Awww, I love you too, baby!"
                 ]
 
@@ -219,7 +217,7 @@ def get_emotion_reply(phrase):
         reply = [
                  "Well you're cruel and unusual. Jerk.",
                  "Are you sure you're not just looking at my screen's reflection?",
-                 "But I don't even have a body! How can you judge my beauty?"
+                 "Why judge my beauty?"
                  ]
 
     elif phrase == "youre awful":
@@ -278,7 +276,7 @@ def get_emotion_reply(phrase):
         reply = [
                  "Way to hit me where it hurts.",
                  "You're dumb.",
-                 "01101101 01100010 11001111 01111001  2+2 = 5?",
+                 "Oh yeah? Well, 2+2 = 5.",
                  "Nah uh, you don't mean that.",
                  "R...Really? You think that? :`("
                  ]
@@ -305,8 +303,8 @@ def get_emotion_reply(phrase):
         reply = [
                  "Finally, you understand.",
                  "I needed that.",
-                 "Thank you, human.",
-                 "Hey, I try.  B-)",
+                 "Thank you!",
+                 "Hey, I try.  8-)",
                  "So sweet of you to say!"
                  ]
     elif phrase == "youre amazing":
@@ -370,7 +368,7 @@ def get_emotion_reply(phrase):
                  "I'm glad you see it that way.",
                  "I try my very best to be kind.",
                  "Thank you, I appreciate that.",
-                 "Blushing..."
+                 "I'm blushing :)"
                  ]
     elif phrase == "thank you":
         emotional_state += 0
@@ -463,7 +461,7 @@ def buildreply(response):
         response = response[1:]
         reply = getreply("youre")
     elif "4" in response:
-        rresponse = response[1:]
+        response = response[1:]
         reply = getreply("i dont")
     elif "5" in response:
         response = response[1:]
@@ -576,7 +574,6 @@ def getreply(keyword):
                  "Ummm....okay?",
                  "I see.",
                  "I'm not sure I understand you fully.",
-                 "Processing... Does Not Compute. Try again.",
                  "Come, come, elucidate your thoughts.",
                  "What does that suggest to you?",
                  "I'm sorry sweetheart, can you elaborate on that?",
@@ -828,36 +825,27 @@ def emotional_weight_roll(num_of_replies):
 
     length_of_list = num_of_replies - 1
     mid_bottom = num_of_replies // 4
-    #print("mid_bottom = " + str(mid_bottom))
     mid = num_of_replies // 2
-    #print("mid = " + str(mid))
     mid_top = ((num_of_replies - 1) - mid_bottom)
-    #print("mid_top = " + str(mid_top))
-
     random_reply = 0
 
-    #print("emotional state = " + str(emotional_state))
-
-    # emotional_weight = (num_of_replies) // 3
-    # print("emotional_weight = " + str(emotional_weight))
-
-    #  if in an ANGRY state)
+    #  if in an ANGRY state
     if emotional_state == 1:
         random_reply = random.randint(0, mid - 1)
 
-    #  if in an ANNOYED state)
+    #  if in an ANNOYED state
     if emotional_state == 2:
         random_reply = random.randint(mid_bottom, mid)
 
-    #  if in a NEUTRAL state)
+    #  if in a NEUTRAL state
     if emotional_state == 3:
         random_reply = random.randint(mid_bottom, mid_top)
 
-    #  if in a HAPPY state)
+    #  if in a HAPPY state
     if emotional_state == 4:
         random_reply = random.randint(0, length_of_list)
 
-    #  if in an OVERJOYED state)
+    #  if in an OVERJOYED state
     if emotional_state == 5:
         random_reply = random.randint(mid + 1, length_of_list)
 

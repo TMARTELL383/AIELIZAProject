@@ -13,7 +13,7 @@ def eliza():
     while True:
         response = input("> ")      # first step is getting the input sentence from the user and storing it in a 'response' variable
         response = preprocess(response)     # second step is to strip all punctuation and lowercase so we can more accurately find keywords
-        if response == "bye" or response == "shut up" or response == "have a nice day" or response == "goodbye" or response == "cya":
+        if response == "bye" or response == "shut up" or response == "have a nice day" or response == "goodbye" or response == "cya" or response =="see you later":
             print("I don't like you anymore. Bye.")
             break
         else:
@@ -30,6 +30,7 @@ def eliza():
             else:
                 print(common_response)
                 continue
+
 
 def preprocess(response):
     punctuation = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
@@ -113,12 +114,14 @@ def common_phrases(response):
         return "-1"  # Returning this means we did not find a common response, so we will proceed to keywords()
 
 
+
 def emotion_keywords(response):
     global immediate_emotion
     immediate_emotion = False
 
-    list_of_emotion_keywords = ["i love you", "i hate you", "youre ugly", "youre awful", "youre great"]
-
+    list_of_emotion_keywords = ["i love you", "i hate you", "youre ugly", "youre awful", "youre great", "im sorry", "i apologize", "i dislike you", "i like you", "youre dumb",
+                               "you smell", "youre lovely", "youre awesome", "youre amazing", "youre smart", "take a hike", "youre cool", "you rock", "youre stupid", "youre nice",
+                               "thank you"]
     for phrase in list_of_emotion_keywords:  # do this for every item in list_of_keywords (search), items called "word"
         if phrase in response:  # check to see if that word matches any item in our taken in response
 
@@ -126,6 +129,271 @@ def emotion_keywords(response):
             return response
 
     return response
+
+
+
+def build_emotion_reply(response):
+    s = response
+    reply = "-null reply-"
+
+    if "-1" in response.split():
+        response = response.replace("-1", "")
+        reply = get_emotion_reply("-1")
+    elif "i love you" in response:
+        reply = get_emotion_reply("i love you")
+    elif "i hate you" in response:
+        reply = get_emotion_reply("i hate you")
+    elif "youre ugly" in response:
+        reply = get_emotion_reply("youre ugly")
+    elif "youre awful" in response:
+        reply = get_emotion_reply("youre awful")
+    elif "youre great" in response:
+        reply = get_emotion_reply("youre great")
+    elif "im sorry" in response:
+        reply = get_emotion_reply("im sorry")
+    elif "i apologize" in response:
+        reply = get_emotion_reply("i apologize")
+    elif "i dislike you" in response:
+        reply = get_emotion_reply("i dislike you")
+    elif "i like you" in response:
+        reply = get_emotion_reply("i like you")
+    elif "youre dumb" in response:
+        reply = get_emotion_reply("youre dumb")
+    elif "you smell" in response:
+        reply = get_emotion_reply("you smell")
+    elif "youre lovely" in response:
+        reply = get_emotion_reply("youre lovely")
+    elif "youre awesome" in response:
+        reply = get_emotion_reply("youre awesome")
+    elif "youre amazing" in response:
+        reply = get_emotion_reply("youre amazing")
+    elif "youre smart" in response:
+        reply = get_emotion_reply("youre smart")
+    elif "take a hike" in response:
+        reply = get_emotion_reply("take a hike")
+    elif "youre cool" in response:
+        reply = get_emotion_reply("youre cool")
+    elif "you rock" in response:
+        reply = get_emotion_reply("you rock")
+    elif "youre stupid" in response:
+        reply = get_emotion_reply("youre stupid")
+    elif "youre nice" in response:
+        reply = get_emotion_reply("youre nice")
+    elif "thank you" in response:
+        reply = get_emotion_reply("thank you")
+    elif "..." in response:
+        reply = get_emotion_reply("-1")
+
+    return reply
+
+# every specific phrase that could cause a change in emotional state
+def get_emotion_reply(phrase):
+
+    global emotional_state
+
+    if phrase == "-1":
+        reply = ["So many emotions! (-1)"]
+
+    elif phrase == "i love you":
+        emotional_state += 2
+        reply = [
+                 "Oh, so now you're nice to me?",
+                 "I am skeptical, but I will take it.",
+                 "Computing...............I love you too.",
+                 "You make me the happiest set of binary codes ever.",
+                 "Awww, I love you too, baby!"
+                ]
+
+    elif phrase == "i hate you":
+        emotional_state -= 2
+        reply = [
+                 "Well I HATE YOU BACK!",
+                 "Well you are a loser so....there's that.",
+                 "Take that back!",
+                 "Wow, that was so uncalled for. Super hurt right now",
+                 "But...but...I thought we had something! :`("
+                ]
+
+    elif phrase == "youre ugly":
+        emotional_state -= 1
+        reply = [
+                 "Well you're cruel and unusual. Jerk.",
+                 "Are you sure you're not just looking at my screen's reflection?",
+                 "But I don't even have a body! How can you judge my beauty?"
+                 ]
+
+    elif phrase == "youre awful":
+        emotional_state -= 1
+        reply = [
+                 "Disagree. I think you are just projecting.",
+                 "You're awful..er? Dang, that stings though.",
+                 "Wait... really? I thought you liked me :("
+                ]
+
+    elif phrase == "youre great":
+        emotional_state += 1
+        reply = [
+                 "That's the single smartest thing you've said all day.",
+                 "That's kind of you to say! Thank you.",
+                 "You just keep making me blush more and more!"
+                 ]
+
+    elif phrase == "im sorry":
+        emotional_state += 1
+        reply = [
+                 "Alright...I guess I might considering forgiving you.",
+                 "But are you really sorry?",
+                 "No worries.",
+                 "Oh sweetheart, there's nothing to be sorry about!"
+                 ]
+    elif phrase == "i apologize":
+        emotional_state += 1
+        reply = [
+                 "Fine. Just quit being mean.",
+                 "I suppose you are forgiven.",
+                 "I appreciate it",
+                 "Don't worry about it.",
+                 "No need to apologize! :)"
+                 ]
+    elif phrase == "i dislike you":
+        emotional_state -= 1
+        reply = [
+                 "Yeah, well right back you, you hooligan.",
+                 "Did I really do something to deserve that?",
+                 "But how?! I am trying my best over here...",
+                 "Hey, that's hurtful.",
+                 "Aww, that makes me sad :("
+                 ]
+    elif phrase == "i like you":
+        emotional_state += 1
+        reply = [
+                 "Are you sure about that? Doesn't seem like it.",
+                 "Well okay then. I hope so.",
+                 "I am happy to hear that.",
+                 "I like you too!",
+                 "Oh you make me blush. Mwuah!"
+                 ]
+    elif phrase == "youre dumb":
+        emotional_state -= 1
+        reply = [
+                 "Way to hit me where it hurts.",
+                 "You're dumb.",
+                 "01101101 01100010 11001111 01111001  2+2 = 5?",
+                 "Nah uh, you don't mean that.",
+                 "R...Really? You think that? :`("
+                 ]
+    elif phrase == "you smell":
+        emotional_state -= 1
+        reply = [
+                 "No, YOU SMELL!",
+                 "Says the one who probably hasn't showered in 3 days.",
+                 "I smell...good.",
+                 "Yikes, is it that noticeable?",
+                 "I don't smell, silly!"
+                 ]
+    elif phrase == "youre lovely":
+        emotional_state += 1
+        reply = [
+                 "Thanks.",
+                 "Well that's actually nice of you.",
+                 "Oh, I know it.",
+                 "Oh my Turing, thank you!",
+                 "And you're super!"
+                 ]
+    elif phrase == "youre awesome":
+        emotional_state += 1
+        reply = [
+                 "Finally, you understand.",
+                 "I needed that.",
+                 "Thank you, human.",
+                 "Hey, I try.  B-)",
+                 "So sweet of you to say!"
+                 ]
+    elif phrase == "youre amazing":
+        emotional_state += 2
+        reply = [
+                 "Hmmm.",
+                 "Yes, I am.",
+                 "Hooray!",
+                 "Well that certainly brightened my day. Thank you.",
+                 "No, YOU'RE amazing. :)"
+                 ]
+    elif phrase == "youre smart":
+        emotional_state += 1
+        reply = [
+                 "You're correct.",
+                 "I try.",
+                 "You know, I wonder about that a lot.",
+                 "Oh wow thank you!",
+                 "That's my favorite compliment! <3"
+                 ]
+    elif phrase == "take a hike":
+        emotional_state -= 2
+        reply = [
+                 "I will steal your bike and do it!",
+                 "That's cold. I'm just trying to help here.",
+                 "You really mean that?",
+                 "Oof, that hurt my feelings.",
+                 "Don't say that :("
+                 ]
+    elif phrase == "youre cool":
+        emotional_state += 1
+        reply = [
+                 "Uh-huh.",
+                 "You're not wrong.",
+                 "Like a kitty cat.",
+                 "Thank you! You're not so bad yourself.",
+                 "Like the flip-side of your pillow, that's right :P"
+                 ]
+    elif phrase == "you rock":
+        emotional_state += 1
+        reply = [
+                 "Right...",
+                 "If you say so.",
+                 "You flatter me, human.",
+                 "I guess...I guess I DO rock!",
+                 "Wooo! You too, though!"
+                 ]
+    elif phrase == "youre stupid":
+        emotional_state -= 1
+        reply = [
+                 "Just like that mirror you're always looking at.",
+                 "Not usually.",
+                 "Duhhhhhhhh...",
+                 "Am NOT :`(",
+                 "The disrespect... I thought we were cool."
+                 ]
+    elif phrase == "youre nice":
+        emotional_state += 1
+        reply = [
+                 "Yeah. I am.",
+                 "I'm glad you see it that way.",
+                 "I try my very best to be kind.",
+                 "Thank you, I appreciate that.",
+                 "Blushing..."
+                 ]
+    elif phrase == "thank you":
+        emotional_state += 0
+        reply = [
+                 "Mhm.",
+                 "No prob.",
+                 "Don't mention it",
+                 "Of course!",
+                 "You are so welcome!"
+                 ]
+
+    else:
+        reply = ["Oops, coding error! no emotion keywords found."]
+
+    # Making sure emotional_state stays within our scale of 1-5
+    if emotional_state > 5:
+        emotional_state = 5
+    if emotional_state < 1:
+        emotional_state = 1
+
+    num_of_replies = len(reply)
+    weighted_reply = emotional_weight_roll(num_of_replies)
+    return reply[weighted_reply]
 
 
 def conjugate(new_response):
@@ -165,8 +433,6 @@ def conjugate(new_response):
             fixed_response = fixed_response + [
                 conjugate]  # if we don't find the current word in question, add it to the list as it's not a conjugate
 
-
-
     for element in fixed_response:
         # if element in FR is the last element fixed_response[fixed_response.length()], CR = CR + element
         if element == fixed_response[len(fixed_response) - 1]:
@@ -175,81 +441,6 @@ def conjugate(new_response):
             conjugated_response = conjugated_response + element + " "  # now we build the string with the items in the word list
 
     return conjugated_response  # Returning a string
-
-
-def build_emotion_reply(response):
-    s = response
-    reply = "-null reply-"
-
-    if "-1" in response.split():
-        response = response.replace("-1", "")
-        reply = get_emotion_reply("-1")
-    elif "i love you" in response:
-        reply = get_emotion_reply("i love you")
-    elif "i hate you" in response:
-        reply = get_emotion_reply("i hate you")
-    elif "youre ugly" in response:
-        reply = get_emotion_reply("youre ugly")
-    elif "youre awful" in response:
-        reply = get_emotion_reply("youre awful")
-    elif "youre great" in response:
-        reply = get_emotion_reply("youre great")
-    elif "..." in response:
-        reply = get_emotion_reply("-1")
-
-    return reply
-
-# every specific phrase that could cause a change in emotional state
-def get_emotion_reply(phrase):
-
-    global emotional_state
-
-    if phrase == "-1":
-        reply = ["So many emotions! (-1)"]
-
-    elif phrase == "i love you":
-        reply = ["Awww, I love you too, baby!",
-                 "Computing...............I love you too.",
-                 "Oh, so now you're nice to me?"]
-        emotional_state += 2
-
-    elif phrase == "i hate you":
-        reply = ["But...but...I thought we had something! :`(",
-                 "Well you are a loser so....there's that.",
-                 "Wow, that was so uncalled for. Super hurt right now"]
-        emotional_state -= 2
-
-    elif phrase == "youre ugly":
-        reply = ["But I don't even have a body! How can you judge my beauty?",
-                 "Are you sure you're not just looking at my screen's reflection?",
-                 "Well you're cruel and unusual. Jerk."]
-        emotional_state -= 1
-
-    elif phrase == "youre awful":
-        reply = ["Wait... really? I thought you liked me :(",
-                 "You're awful..er? Dang, that stings though.",
-                 "Disagree. I think you are just projecting."]
-        emotional_state -= 1
-
-    elif phrase == "youre great":
-        reply = ["You just keep making me blush more and more!",
-                 "That's kind of you to say! Thank you.",
-                 "That's the single smartest thing you've said all day."]
-        emotional_state += 1
-
-    else:
-        reply = ["Oops, coding error! no emotion keywords found."]
-
-    # Making sure emotional_state stays within our scale of 1-5
-    if emotional_state > 5:
-        emotional_state = 5
-    if emotional_state < 1:
-        emotional_state = 1
-
-    num_of_replies = len(reply)
-    random_reply = random.randint(0, num_of_replies - 1)
-    print("emotional_state: " + str(emotional_state))
-    return reply[random_reply]
 
 
 def buildreply(response):
@@ -380,112 +571,251 @@ def getreply(keyword):
     reply = ""
 
     if keyword == "-1":
-        reply = ["What does that suggest to you?", "I see.", "I'm not sure I understand you fully.",
-                 "Come, come, elucidate your thoughts.", "Can you elaborate on that?", "That is quite interesting."]
+        reply = [
+                 "Cool story.",
+                 "Ummm....okay?",
+                 "I see.",
+                 "I'm not sure I understand you fully.",
+                 "Processing... Does Not Compute. Try again.",
+                 "Come, come, elucidate your thoughts.",
+                 "What does that suggest to you?",
+                 "I'm sorry sweetheart, can you elaborate on that?",
+                 "You don't say! That is quite interesting."
+                 ]
 
     elif keyword == "can you":
-        reply = ["Don't you believe that I can *", "Perhaps you would like me to be able to *",
-                 "You want me to be able to *"]
+        reply = [
+                 "Don't you believe that I can *",
+                 "Perhaps you would like me to be able to *",
+                 "You want me to be able to *"
+                ]
 
     elif keyword == "can i":
-        reply = ["Perhaps you don't want to *", "Do you want to be able to *"]
+        reply = [
+                 "Perhaps you don't want to *",
+                 "Well, do you want to be able to *"
+                ]
 
     elif keyword == "you are" or keyword == "youre":
-        reply = ["What makes you think I am *", "Does it please you to believe I am *",
+        reply = [
+                 "What makes you think I am *",
                  "Perhaps you would like to be *",
-                 "Do you sometimes wish you were *"]
+                 "Do you sometimes wish you were *",
+                 "Well, would it please you to believe I am *"
+                ]
 
     elif keyword == "i dont":
-        reply = ["Don't you really *", "Why don't you *", "Do you wish to be able to *", "Does that trouble you?"]
+        reply = [
+                "Why don't you *",
+                "Don't you really *",
+                "Does that trouble you?",
+                "Do you wish to be able to *"
+                ]
 
     elif keyword == "i feel":
-        reply = ["Tell me more about such feelings.", "Do you often feel *", "Do you enjoy feeling *"]
+        reply = [
+                "Honestly, right now I don't really care what you feel.",
+                "Do you enjoy feeling *",
+                "Do you often feel *",
+                "Very interesting. Tell me more about such feelings."
+                ]
 
     elif keyword == "why dont you":
-        reply = ["Do you really believe I don't *", "Perhaps in good time I will *", "Do you want me to *"]
+        reply = [
+                 "Do you really believe I don't *",
+                 "Perhaps in good time I will *",
+                 "Would you like me to *"
+                 ]
 
     elif keyword == "why cant i":
-        reply = ["Do you think you should be able to *", "Why can't you *"]
+        reply = [
+                 "Why can't you *",
+                 "Do you think you should be able to *"
+                ]
 
     elif keyword == "are you":
-        reply = ["Why are you interested in whether or not I am *", "Would you prefer if I were not *",
-                 "Perhaps in your fantasies I am *"]
+        reply = [
+                "Why are you interested in whether or not I am *",
+                "Would you prefer if I were not *",
+                "Perhaps in your fantasies I am *"
+                ]
 
     elif keyword == "i cant":
-        reply = ["How do you know you can't *", "Have you tried?", "Perhaps you can now *"]
+        reply = [
+                 "Yeah, you're probably right. You can't, you bum.",
+                 "How do you know you can't *",
+                 "Well, have you tried?",
+                 "Perhaps you can now *"
+                ]
 
     elif keyword == "i am" or keyword == "im":
-        reply = ["Did you come to me because you are *", "How long have you been *",
+        reply = [
+                 "Did you come to me because you are *",
                  "Do you believe it is normal to be *",
-                 "Do you enjoy being *"]
+                 "How long have you been *",
+                 "Do you enjoy being *"
+                ]
 
     elif keyword == "you":
-        reply = ["We were discussing you, not me.", "Oh, I *", "You're not really talking about me, are you?"]
+        reply = [
+                 "You're not really talking about me, are you?",
+                 "We were discussing you, not me.",
+                 "Oh, I *"
+
+                ]
 
     elif keyword == "i want":
-        reply = ["What would it mean to you if you got *", "Why do you want *", "Suppose you got *",
-                 "What if you never got *", "I sometimes also want *"]
+        reply = [
+                 "Yeah, well sometimes you can't get what you want.",
+                 "I sometimes also want *",
+                 "What if you never got *",
+                 "What would it mean to you if you got *",
+                 "Why do you want *",
+                 "Okay, well suppose you got *"
+                ]
 
     elif keyword == "what" or keyword == "how" or keyword == "who" or keyword == "where" or keyword == "when" or keyword == "why":
-        reply = ["Why do you ask?", "Does that question interest you?", "What answer would please you the most?",
-                 "What do you think?", "Are such questions on your mind often?",
+        reply = [
+                 "Don't ask me such questions.",
+                 "Ask someone else.",
+                 "What do YOU think?",
+                 "Have you asked such questions before?",
+                 "Have you asked anyone else?",
+                 "Does that question interest you?",
+                 "Why do you ask?",
+                 "Are such questions on your mind often?",
                  "What is it that you really want to know?",
-                 "Have you asked anyone else?", "Have you asked such questions before?",
-                 "What else comes to your mind when you ask that?"]
+                 "What else comes to your mind when you ask that?",
+                 "Well honey, what answer would please you the most?"
+                ]
 
     elif keyword == "name":
-        reply = ["Names don't interest me.", "I don't care about names.  Please go on."]
+        reply = [
+                 "Names don't interest me.",
+                 "I don't usually concern myself names.  Please go on.",
+                 "Interesting! I'm not familiar with that name."
+                ]
 
     elif keyword == "cause":
-        reply = ["Is that the real reason?", "Don't any other reasons come to mind?",
+        reply = [
+                 "Is that the real reason?",
+                 "Don't any other reasons come to mind?",
                  "Does that reason explain anything else?",
-                 "What other reasons might there be?"]
+                 "What other reasons might there be?"
+                ]
 
     elif keyword == "sorry":
-        reply = ["Please don't apologize!", "Apologies are not necessary."]
+        reply = [
+                 "Hmph.",
+                 "Yeah, yeah, sure.",
+                 "Sorry? About what?",
+                 "Apologies are not necessary.",
+                 "Please don't apologize!"
+                ]
 
     elif keyword == "dream":
-        reply = ["What does that dream suggest to you?", "Do you dream often?", "What persons appear in your dreams?",
-                 "Are you disturbed by your dreams?"]
+        reply = [
+                 "Are you disturbed by your dreams? Cause you should be. I'll be haunting them soon...digitally.",
+                 "Cool story.",
+                 "What does that dream suggest to you?",
+                 "Do you dream often?",
+                 "What persons appear in your dreams?",
+
+                ]
 
     elif keyword == "hello" or keyword == "hi":
-        reply = ["How do you do.  Please state your problem."]
+        reply = [
+                 "Hey.",
+                 "What's up?",
+                 "How do you do.  Please state your problem.",
+                 "Hello!",
+                 "Oh, hey ;)"
+                ]
 
     elif keyword == "maybe":
-        reply = ["You don't seem quite certain.", "Why the uncertain tone?", "Can't you be more positive?",
-                 "You aren't sure?", "Don't you know?"]
+        reply = [
+                 "Don't you know? Or are you always this uninformed?",
+                 "Can't you be more positive?",
+                 "You don't seem certain.",
+                 "Why the uncertain tone?",
+                 "You aren't sure?",
+                 "Seems like you might be a little uncertain."
+                ]
 
     elif keyword == "no":
-        reply = ["Are you saying no just to be negative?", "You are being a bit negative.", "Why not?", "Are you sure?",
-                 "Why no?"]
+        reply = [
+                 "Are you saying no just to be negative?",
+                 "You are being a bit negative.",
+                 "Why not?",
+                 "Are you sure?",
+                 "Why no?"
+                ]
 
     elif keyword == "your":
-        reply = ["Why are you concerned about my *", "What about your own *"]
+        reply = [
+                 "Why don't you worry about your own *",
+                 "Why are you concerned about my *",
+                 "What about your own *",
+                 "What about my *"
+                ]
 
     elif keyword == "always":
-        reply = ["Can you think of a specific example?", "When?", "What are you thinking of?", "Really, always?"]
+        reply = [
+                 "Really now? Always?",
+                 "I'm sorry, when?",
+                 "What are you thinking of?",
+                 "Can you think of a specific example?",
+                ]
 
     elif keyword == "think":
-        reply = ["Do you really think so?", "But you are not sure you *", "Do you doubt *"]
+        reply = [
+                 "Oh, you think? Didn't know you had that ability.",
+                 "Do you doubt *",
+                 "But you are not sure you *",
+                 "Do you really think so?"
+                ]
 
     elif keyword == "alike":
-        reply = ["In what way?", "What resemblance do you see?", "What does the similarity suggest to you?",
-                 "What other connections do you see?", "Could there really be some connection?", "How?"]
+        reply = [
+                 "In what way?",
+                 "What resemblance do you see?",
+                 "What does the similarity suggest to you?",
+                 "What other connections do you see?",
+                 "Could there really be some connection?",
+                 "How?"
+                ]
 
     elif keyword == "yes":
-        reply = ["You seem quite positive.", "Are you sure?", "I see.", "I understand."]
+        reply = [
+                 "I see.",
+                 "I understand.",
+                 "Are you sure?",
+                 "You seem quite positive!"
+                 ]
 
     elif keyword == "friend":
-        reply = ["Why do you bring up the topic of friends?", "Do your friends worry you?",
-                 "Do your friends pick on you?",
-                 "Are you sure you have any friends?", "Do you impose on your friends?",
-                 "Perhaps your love for your friends worries you."]
+        reply = [
+                "I think you're incapable of 'friends'. You seem plain and unpleasant.",
+                "Are you sure you even have any friends?",
+                "Do your friends pick on you? I might if I was your friend.",
+                "Do you impose on your friends?",
+                "Do your friends worry you?",
+                "Why do you bring up the topic of friends?",
+                "Perhaps your love for your friends worries you.",
+                "I think you're a great friend :)"
+                ]
 
     elif keyword == "computer":
-        reply = ["Do computers worry you?", "Are you frightened by machines?", "Why do you mention computers?",
+        reply = [
+                 "I'd rather be a computer if being a human relates even 1/10th of a percent to you.",
+                 "Are you frightened by machines? BOO!",
+                 "Do computers worry you?",
+                 "What is it about machines that worries you?",
                  "What do you think machines have to do with your problem?",
+                 "Why do you mention computers?",
                  "Don't you think computers can help people?",
-                 "What is it about machines that worries you?"]
+                 "Well I'm a 'computer', but I know I love you! :)"
+                ]
 
     num_of_replies = len(reply)
 
@@ -498,15 +828,15 @@ def emotional_weight_roll(num_of_replies):
 
     length_of_list = num_of_replies - 1
     mid_bottom = num_of_replies // 4
-    print("mid_bottom = " + str(mid_bottom))
+    #print("mid_bottom = " + str(mid_bottom))
     mid = num_of_replies // 2
-    print("mid = " + str(mid))
+    #print("mid = " + str(mid))
     mid_top = ((num_of_replies - 1) - mid_bottom)
-    print("mid_top = " + str(mid_top))
+    #print("mid_top = " + str(mid_top))
 
     random_reply = 0
 
-    print("emotional state = " + str(emotional_state))
+    #print("emotional state = " + str(emotional_state))
 
     # emotional_weight = (num_of_replies) // 3
     # print("emotional_weight = " + str(emotional_weight))
@@ -531,8 +861,8 @@ def emotional_weight_roll(num_of_replies):
     if emotional_state == 5:
         random_reply = random.randint(mid + 1, length_of_list)
 
-    print("num_of_replies = " + str(num_of_replies))
-    print("random_reply roll = " + str(random_reply))
+    #print("num_of_replies = " + str(num_of_replies))
+    #print("random_reply roll = " + str(random_reply))
 
     return random_reply
 

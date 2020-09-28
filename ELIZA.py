@@ -1,9 +1,13 @@
-# Replacing all punctuation within a sentence
-# www.geeksforgeeks.org
+# Presenting ELIZA!
+# By: Brenner Campos & Tyler Martell
+
+
+# References:
+    # Replacing all punctuation within a sentence
+    # https://www.geeksforgeeks.org/python-remove-punctuation-from-string/
+
 
 import random
-
-
 emotional_state = 3
 
 
@@ -11,8 +15,8 @@ def eliza():
 
     print("Hello, my name is Eliza. Talk to me.")
     while True:
-        response = input("> ")      # first step is getting the input sentence from the user and storing it in a 'response' variable
-        response = preprocess(response)     # second step is to strip all punctuation and lowercase so we can more accurately find keywords
+        response = input("> ")
+        response = preprocess(response)
         if response == "bye" or response == "shut up" or response == "have a nice day" or response == "goodbye" or response == "cya" or response =="see you later":
             print("I don't like you anymore. Bye.")
             break
@@ -44,24 +48,16 @@ def preprocess(response):
 def keywords(response):
     # first, run more specified keyword list to see if there are specific programmed phrases
     emotion_keywords(response)
-
-    # print(immediate_emotion)
-
     if immediate_emotion:  # if we find a direct string of emotion_keywords
-        # print("there is a specific emotion phrase found...")
-        return response  # just return what we got
+        return response  # return to eliza if boolean is true
 
     list_of_keywords = ["can you", "can i", "you are", "youre", "i dont", "i feel", "why dont you", "why cant i",
                         "are you", "i cant", "i am", "im", "you", "i want", "what", "how", "who", "where", "when", "why", "name",
                         "cause", "sorry", "dream", "hello", "hi", "maybe", "no", "your", "always", "think", "alike", "yes",
                         "friend", "computer"]
-    # Call eliza_emotions() to predict the mood of the reply
-
-    #    eliza_emotions(response)
 
     for word in list_of_keywords:  # do this for every item in list_of_keywords (search), items called "word"
         if word in response:  # check to see if that word matches any item in our taken in response
-
             cut_word_and_left = response.find(word)  # index for where in the word to cut from
             index = list_of_keywords.index(word)
             response = response[cut_word_and_left:]
@@ -71,10 +67,7 @@ def keywords(response):
     return "-1"
 
 
-# There are a couple of ways we could implement emotion into eliza
-# 1) eliza_emotions() is going to take in a keyword, and then look at the words surrounding it.
-# Example: response = "i hate you" keyword = hate, surrounding words = i, you
-# 2)
+
 def common_phrases(response):
 
     if response == "how are you" or response == "how are you doing" or response == "how is your day" or response == "how is your day so far":
@@ -111,7 +104,7 @@ def common_phrases(response):
         reply = "I read occasionally, but not often, so I don't have a favorite author."
         return reply
     else:
-        return "-1"  # Returning this means we did not find a common response, so we will proceed to keywords()
+        return "-1"  # Returning this means we did not find a common response, so we will proceed to keywords() as normal
 
 
 
@@ -428,8 +421,8 @@ def conjugate(new_response):
         elif conjugate == "me":
             fixed_response = fixed_response + ["you"]
         else:
-            fixed_response = fixed_response + [
-                conjugate]  # if we don't find the current word in question, add it to the list as it's not a conjugate
+            fixed_response = fixed_response + [conjugate]
+            # if we don't find the current word in question, add it to the list as it's not a conjugate
 
     for element in fixed_response:
         # if element in FR is the last element fixed_response[fixed_response.length()], CR = CR + element
@@ -849,11 +842,7 @@ def emotional_weight_roll(num_of_replies):
     if emotional_state == 5:
         random_reply = random.randint(mid + 1, length_of_list)
 
-    #print("num_of_replies = " + str(num_of_replies))
-    #print("random_reply roll = " + str(random_reply))
-
     return random_reply
-
 
 
 eliza()

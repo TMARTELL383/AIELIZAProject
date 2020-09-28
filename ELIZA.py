@@ -13,7 +13,7 @@ def eliza():
     while True:
         response = input("> ")      # first step is getting the input sentence from the user and storing it in a 'response' variable
         response = preprocess(response)     # second step is to strip all punctuation and lowercase so we can more accurately find keywords
-        if response == "bye" or response == "shut up":
+        if response == "bye" or response == "shut up" or response == "have a nice day" or response == "goodbye" or response == "cya":
             print("I don't like you anymore. Bye.")
             break
         else:
@@ -76,7 +76,7 @@ def keywords(response):
 # 2)
 def common_phrases(response):
 
-    if response == "how are you":
+    if response == "how are you" or response == "how are you doing" or response == "how is your day" or response == "how is your day so far":
         reply = "Good, thank you."
         return reply
     elif response == "hello" or response == "hi" or response == "hello eliza" or response == "hi eliza":
@@ -85,13 +85,32 @@ def common_phrases(response):
     elif response == "nice to meet you" or response == "nice to meet you eliza":
         reply = "Nice to meet you as well."
         return reply
-    elif response == "where are you from":
+    elif response == "where are you from" or response == "do you live in the united states":
         reply = "I'm from Massachusetts."
         return reply
     elif response == "what do you do" or response == "what is your job" or response == "what do you do for a living":
         reply = "I am here to listen to your problems."
         return reply
-    return "-1"  # Returning this means we did not find a common response, so we will proceed to keywords()
+    elif response == "whats your name" or response == "what is your name" or response == "who are you":
+        reply = "My name is Eliza. Nice to meet you."
+        return reply
+    elif response == "how was your weekend" or response == "was your weekend good":
+        reply = "My weekend was great, thank you."
+        return reply
+    elif response == "its beautiful today" or response == "nice day out today" or response == "lovely weather we have today" or response == "its a beautiful day isnt it":
+        reply = "Yes, it is a nice day today."
+        return reply
+    elif response == "whats your favorite type of music" or response == "what music do you listen to":
+        reply = "I like rock & roll."
+        return reply
+    elif response == "whats your favorite sports team":
+        reply = "I like the New England Patriots."
+        return reply
+    elif response == "who's your favorite author" or response == "do you read books" or response == "what kind of books do you like":
+        reply = "I read occasionally, but not often, so I don't have a favorite author."
+        return reply
+    else:
+        return "-1"  # Returning this means we did not find a common response, so we will proceed to keywords()
 
 
 def emotion_keywords(response):
@@ -107,36 +126,6 @@ def emotion_keywords(response):
             return response
 
     return response
-
-
-def eliza_emotions(response):
-    # look at sentence and see if there are any keyword triggers (i hate you)
-    # Then write an if statement that will see what kind of emotion that keyword will trigger
-    # You can then modify the code once you have the initial setup to look at the surrounding words (like 'i' or 'you')
-    # Then make a conclusion as to what kind of emotion eliza will convey
-    # This function should return a boolean value.
-    # Then depending on the emotion, eliza will look at certain replies, can make a new reply function or make a
-    # separate reply list within our reply functions
-
-    # Neutral will be the default emotion
-    neutral = False
-    happy, sad, angry = False
-    emotions = [happy, sad, angry, "upset", "joyful", "fearful", "disgusted", "interested", "confused",
-                "sympathetic", "surprised", "excited"]
-    keyword_trigger = ["love", "hate", "stupid", "great", "happy", "sad", "angry", "upset"]
-    for word in response:
-        if word in keyword_trigger:
-            index = keyword_trigger.index(word)
-    else:
-        index = -1
-
-    # The index will determine the returned emotion/boolean
-    if index == -1:
-        neutral = True
-    elif index == 0:
-        emotions[0] = True
-    elif index == 1:
-        emotions[1] = True
 
 
 def conjugate(new_response):

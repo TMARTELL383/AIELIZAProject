@@ -1,1 +1,0 @@
-#since the number will be the first item, copies number char by char until you hit a space

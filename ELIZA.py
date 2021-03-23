@@ -8,34 +8,36 @@
 
 
 import random
+
 emotional_state = 3
 
-
 def eliza():
-
     print("Hello, my name is Eliza. Talk to me.")
     while True:
         response = input("> ")
         response = preprocess(response)
+        # If the user enters either of these, eliza doesn't want to talk anymore and the program ends.
         if response == "bye" or response == "shut up" or response == "have a nice day" or response == "goodbye" or response == "cya" or response =="see you later":
             print("I don't like you anymore. Bye.")
             break
         else:
+            # First check common phrases, if none, proceed with sentence analysis
             common_response = common_phrases(response)
-            if common_response == "-1": # This means there were no common phrases in response, so we proceed as normal.
+            if common_response == "-1": # -1 means there were no common phrases in response, so we proceed as normal.
                 response = keywords(response)  # checks preprocessed sentence for specific keywords, found in 'list_of_keyword'
+                # Did we give an emotional reply? If so, eliza will respond with emotional reply, otherwise - normal response
                 if immediate_emotion:
                     response = build_emotion_reply(response)
                     print(response)
                 else:
-                    response = conjugate(response)  # throws
+                    response = conjugate(response)
                     response = buildreply(response)
                     print(response)
             else:
                 print(common_response)
                 continue
 
-
+# Strips our sentence of punctuation and makes it lower case. Makes things much easier for analyzing
 def preprocess(response):
     punctuation = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
     for item in response:
@@ -44,12 +46,11 @@ def preprocess(response):
     response = response.lower()
     return response
 
-
+# List of keywords eliza will look for in our responses - each of these have their own set of appropriate responses
 def keywords(response):
-    # first, run more specified keyword list to see if there are specific programmed phrases
-    emotion_keywords(response)
-    if immediate_emotion:  # if we find a direct string of emotion_keywords
-        return response  # return to eliza if boolean is true
+    emotion_keywords(response) # first, run more specified keyword list to see if there are specific programmed phrases
+    if immediate_emotion:
+        return response # if we find a direct string of emotion_keywords, return to eliza()
 
     list_of_keywords = ["can you", "can i", "you are", "youre", "i dont", "i feel", "why dont you", "why cant i",
                         "are you", "i cant", "i am", "im", "you", "i want", "what", "how", "who", "where", "when", "why", "name",
@@ -63,11 +64,11 @@ def keywords(response):
             response = response[cut_word_and_left:]
             response = response.replace(word, str(index) + " ")
 
-            return response
-    return "-1"
+            return response # Return modified response with the index of the keyword inside the response sentence
+    return "-1" # No keywords found
 
 
-
+# List of common phrases for eliza to look for. We don't need to analyze a "How are you?"
 def common_phrases(response):
 
     if response == "how are you" or response == "how are you doing" or response == "how is your day" or response == "how is your day so far":
@@ -107,7 +108,7 @@ def common_phrases(response):
         return "-1"  # Returning this means we did not find a common response, so we will proceed to keywords() as normal
 
 
-
+# Looks for emotion within our response, such as "i love you" or "i hate you"
 def emotion_keywords(response):
     global immediate_emotion
     immediate_emotion = False
@@ -124,7 +125,7 @@ def emotion_keywords(response):
     return response
 
 
-
+# Common emotional replies, much like the common_phrases funtion, each of these affects the emotional_state in some way
 def build_emotion_reply(response):
     reply = ""
 
@@ -177,7 +178,9 @@ def build_emotion_reply(response):
 
     return reply
 
+
 # every specific phrase that could cause a change in emotional state
+# The emotional_state level will determine the "mood" or "attitude" of each response
 def get_emotion_reply(phrase):
 
     global emotional_state
@@ -386,7 +389,7 @@ def get_emotion_reply(phrase):
     weighted_reply = emotional_weight_roll(num_of_replies)
     return reply[weighted_reply]
 
-
+# Looks for words in response and returns its appropriate conjugate. Example) "I" in response returns "you" conjugate
 def conjugate(new_response):
     words = new_response.split()
 
@@ -433,7 +436,7 @@ def conjugate(new_response):
 
     return conjugated_response  # Returning a string
 
-
+# The numbers in the response correspond to a particular keyword. We're looking for that index so we can form a reply
 def buildreply(response):
 
     response = response.split()
@@ -555,7 +558,7 @@ def buildreply(response):
 
     return reply
 
-
+# Depending on the keyword index, returns an appropriate (but random) reply from the list of replies for each keyword
 def getreply(keyword):
 
     global emotional_state
@@ -814,6 +817,10 @@ def getreply(keyword):
     return reply[weighted_reply]
 
 
+# Based on the emotional_state, we select a "random" index in our list of emotional replies for each emotional keyword
+# If the emotional_state is 1, the replies will lean toward picking an index at the beginning of reply list which by design have more negative and unfriendly response
+# If the emotional_state is 3, it the selected index will lean more toward the middle of the list, selecting more neutral responses
+# An emotional_state of 5 will be selecting responses from the end of the list which have positive and very friendly responses
 def emotional_weight_roll(num_of_replies):
 
     length_of_list = num_of_replies - 1
